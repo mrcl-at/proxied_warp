@@ -1,0 +1,12 @@
+main: at.mrcl.proxied_warp.paper.WarpPlugin
+name: proxied_warp
+version: 1.0
+api-version: 1.21
+
+author: mrcl
+
+commands:
+  connect:
+    usage: /proxiedwarp <server> <warp>
+    description: Connect to a server and warp to a location.
+    aliases: [proxied_warp]
