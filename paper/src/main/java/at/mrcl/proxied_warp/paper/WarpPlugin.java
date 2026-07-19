@@ -3,6 +3,7 @@ package at.mrcl.proxied_warp.paper;
 import com.google.common.io.ByteStreams;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,6 +14,8 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class WarpPlugin extends JavaPlugin implements PluginMessageListener, CommandExecutor {
+
+    private static final int BSTATS_ID = 32759;
 
     private static final String CHANNEL = "proxied_warp:proxied_warp";
     private static final String MESSAGE_PERMISSION = "<red>You do not have permission to do that!";
@@ -26,6 +29,7 @@ public class WarpPlugin extends JavaPlugin implements PluginMessageListener, Com
         getCommand("proxiedwarp").setExecutor(this);
 
         loadConfig();
+        new Metrics(this, BSTATS_ID);
     }
 
     private void loadConfig() {

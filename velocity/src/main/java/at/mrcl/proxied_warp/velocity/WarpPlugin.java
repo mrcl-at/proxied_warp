@@ -9,25 +9,30 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 @Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.0", authors = { "mrcl" })
 public class WarpPlugin {
 
     private static final MinecraftChannelIdentifier CHANNEL = MinecraftChannelIdentifier.from("proxied_warp:proxied_warp");
+    private static final int BSTATS_ID = 32758;
 
     private final ProxyServer server;
     private final Logger logger;
+    private final Metrics.Factory metricsFactory;
 
     @Inject
-    public WarpPlugin(ProxyServer server, Logger logger) {
+    public WarpPlugin(ProxyServer server, Logger logger, Metrics.Factory metricsFactory) {
         this.server = server;
         this.logger = logger;
+        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
     public void onProxyInitializeEvent(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(CHANNEL);
+        metricsFactory.make(this, BSTATS_ID);
     }
 
     @Subscribe
