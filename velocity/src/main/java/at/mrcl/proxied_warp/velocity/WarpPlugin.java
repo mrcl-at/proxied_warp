@@ -12,7 +12,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
-@Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.0", authors = { "mrcl" })
+@Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.0.1", authors = { "mrcl" })
 public class WarpPlugin {
 
     private static final MinecraftChannelIdentifier CHANNEL = MinecraftChannelIdentifier.from("proxied_warp:proxied_warp");
