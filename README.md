@@ -4,10 +4,10 @@ Proxied Warp allows players to teleport **across servers** within a Velocity net
 
 The project consists of two parts:
 
-| Module     | Platform         | Task                                                                                                                 |
-|------------|------------------|----------------------------------------------------------------------------------------------------------------------|
-| `velocity` | Velocity (Proxy) | Forwards warp requests between backend servers and connects players to the target server when needed                 |
-| `paper`    | Paper (Backend)  | Receives the `/proxiedwarp` command from the player and executes the actual warp command after the server connection |
+| Module     | Task                                                                                                                 |
+|------------|----------------------------------------------------------------------------------------------------------------------|
+| `velocity` | Forwards warp requests between backend servers and connects players to the target server when needed                 |
+| `paper`    | Receives the `/proxiedwarp` command from the player and executes the actual warp command after the server connection |
 
 ## How It Works
 
