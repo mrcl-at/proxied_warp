@@ -79,6 +79,7 @@ If `need-permission` is set to `false` (default), no permission check is perform
 ## Requirements
 
 - A Velocity proxy.
+- A Paper based backend server.
 - A warp plugin on each involved backend server that can be triggered via command (not via API), and whose command can be entered in `command-prefix`.
 - Java version 25 or higher.
 
