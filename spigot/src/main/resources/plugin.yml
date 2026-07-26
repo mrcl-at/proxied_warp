@@ -1,0 +1,11 @@
+main: at.mrcl.proxied_warp.spigot.WarpPlugin
+name: proxied_warp
+version: 1.0.1
+
+author: mrcl
+
+commands:
+  proxiedwarp:
+    usage: /proxiedwarp <server> <warp>
+    description: Connect to a server and warp to a location.
+    aliases: [proxied_warp]
