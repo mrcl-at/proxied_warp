@@ -1,90 +1,38 @@
 package at.mrcl.proxied_warp.spigot;
 
-import com.google.common.io.ByteStreams;
+import at.mrcl.proxied_warp.core.ProjectVariable;
+import at.mrcl.proxied_warp.core.bukkit.BukkitPlugin;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.jspecify.annotations.NonNull;
 
-public class WarpPlugin extends JavaPlugin implements PluginMessageListener, CommandExecutor {
-
-    private static final int BSTATS_ID = 32759;
-
-    private static final String CHANNEL = "proxied_warp:proxied_warp";
-    private static final String MESSAGE_PERMISSION = "&cYou do not have permission to do that!";
-    private static final String MESSAGE_USAGE = "&cUsage:&r /proxiedwarp <server> <warp>";
+public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
 
     @Override
     public void onEnable() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, this);
-
-        getCommand("proxiedwarp").setExecutor(this);
-
-        loadConfig();
-        new Metrics(this, BSTATS_ID);
-    }
-
-    private void loadConfig() {
-        getConfig().addDefault("command-prefix", "warp");
-        getConfig().addDefault("need-permission", false);
-        getConfig().addDefault("message.usage", MESSAGE_USAGE);
-        getConfig().addDefault("message.permission", MESSAGE_PERMISSION);
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        enable();
+        new Metrics(this, ProjectVariable.BSTATS_ID_BUKKIT);
     }
 
     @Override
-    public void onPluginMessageReceived(@NonNull String channel, @NonNull Player player, byte @NonNull [] data) {
-        final var message = ByteStreams.newDataInput(data).readUTF();
-        final var args = message.split(" ");
-        // Message: <player> <server> <warp>
-        if (args.length != 3) {
-            getLogger().severe("Invalid message format: " + message);
-            return;
-        }
-
-        final var target = Bukkit.getPlayer(args[0]);
-        if (target == null) {
-            getLogger().severe("Player not found: " + args[0] + " (Message: " + message + ")");
-            return;
-        }
-
-        Bukkit.dispatchCommand(player, getConfig().getString("command-prefix") + " " + args[2]);
+    public JavaPlugin getPlugin() {
+        return this;
     }
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NonNull [] args) {
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cThis command can only be executed by players.");
-            return true;
-        }
-
-        if (args.length != 2) {
-            player.sendMessage(getMessageComponent("usage", MESSAGE_USAGE));
-            return true;
-        }
-
-        if (getConfig().getBoolean("need-permission") && !(player.hasPermission("proxiedwarp.warp.*") || player.hasPermission("proxiedwarp.warp." + args[1]))) {
-            player.sendMessage(getMessageComponent("permission", MESSAGE_PERMISSION));
-            return true;
-        }
-
-        final var stream = ByteStreams.newDataOutput();
-        stream.writeUTF(player.getName() + " " + String.join(" ", args));
-
-        player.sendPluginMessage(this, CHANNEL, stream.toByteArray());
-        return true;
+    public String getMessageUsage() {
+        return "&cYou do not have permission to do that!";
     }
 
-    private String getMessageComponent(String key, String fallback) {
+    @Override
+    public String getMessagePermission() {
+        return "&cUsage:&r /proxiedwarp <server> <warp>";
+    }
+
+    @Override
+    public void sendMessage(CommandSender sender, String key, String fallback) {
         var message = getConfig().getString("message." + key);
         if (message == null) message = fallback;
-        return message.replace("&", "§");
+        sender.sendMessage(message.replace("&", "§"));
     }
 }
