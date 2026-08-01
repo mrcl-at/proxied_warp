@@ -20,12 +20,12 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
-    public String getMessageUsage() {
+    public String getMessagePermission() {
         return "&cYou do not have permission to do that!";
     }
 
     @Override
-    public String getMessagePermission() {
+    public String getMessageUsage() {
         return "&cUsage:&r /proxiedwarp <server> <warp>";
     }
 
