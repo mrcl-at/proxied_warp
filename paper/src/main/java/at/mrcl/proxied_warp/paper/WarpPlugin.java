@@ -36,6 +36,11 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
+    public String getMessageWarpNotWhitelisted() {
+        return "<red>This warp is not whitelisted!";
+    }
+
+    @Override
     public void sendMessage(CommandSender sender, String key, String fallback) {
         var message = getConfig().getString("message." + key);
         if (message == null) message = fallback;

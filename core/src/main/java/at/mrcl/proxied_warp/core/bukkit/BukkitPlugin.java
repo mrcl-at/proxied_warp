@@ -18,9 +18,11 @@ public interface BukkitPlugin {
         getConfig().addDefault("command-prefix", "warp");
         getConfig().addDefault("need-permission", false);
         getConfig().addDefault("whitelisted-servers", new String[]{});
+        getConfig().addDefault("whitelisted-warps", new String[]{});
         getConfig().addDefault("message.usage", getMessageUsage());
         getConfig().addDefault("message.permission", getMessagePermission());
         getConfig().addDefault("message.server-not-whitelisted", getMessageServerNotWhitelisted());
+        getConfig().addDefault("message.warp-not-whitelisted", getMessageWarpNotWhitelisted());
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -35,6 +37,7 @@ public interface BukkitPlugin {
     String getMessageUsage();
     String getMessagePermission();
     String getMessageServerNotWhitelisted();
+    String getMessageWarpNotWhitelisted();
 
     void sendMessage(CommandSender sender, String key, String fallback);
 }
