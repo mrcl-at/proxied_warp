@@ -15,6 +15,7 @@ public interface BukkitPlugin {
 
         getCommand("proxiedwarp").setExecutor(new ProxiedWarpCommand(this));
 
+        getConfig().options().header("ProxiedWarp by mrcl - https://github.com/mrcl-at/proxied_warp");
         getConfig().addDefault("command-prefix", "warp");
         getConfig().addDefault("need-permission", false);
         getConfig().addDefault("whitelisted-servers", new String[]{});
