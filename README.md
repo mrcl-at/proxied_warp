@@ -39,9 +39,15 @@ On first startup, the respective plugin generates a `config.yml` with the follow
 ```yaml
 command-prefix: warp
 need-permission: false
+whitelisted-servers: []
+whitelisted-warps: []
+aliases:
+  spawn: lobby
 message:
   usage: '<red>Usage:</red> /proxiedwarp <server> <warp>'
   permission: '<red>You do not have permission to do that!</red>'
+  server-not-whitelisted: '<red>This server is not whitelisted!</red>'
+  warp-not-whitelisted: '<red>This warp is not whitelisted!</red>'
 ```
 
 **`spigot` module:**
@@ -49,17 +55,28 @@ message:
 ```yaml
 command-prefix: warp
 need-permission: false
+whitelisted-servers: []
+whitelisted-warps: []
+aliases:
+  spawn: lobby
 message:
   usage: '&cUsage:&r /proxiedwarp <server> <warp>'
   permission: '&cYou do not have permission to do that!'
+  server-not-whitelisted: '&cThis server is not whitelisted!'
+  warp-not-whitelisted: '&cThis warp is not whitelisted!'
 ```
 
-| Key                  | Description                                                                                                                                       |
-|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `command-prefix`     | Command that is executed on the target server to actually teleport the player to the warp point (e.g., the command of the installed warp plugin). |
-| `need-permission`    | Determines whether players need an explicit permission to use `/proxiedwarp` for a specific server (see [Permissions](#permissions)).             |
-| `message.usage`      | Message shown when the command is used incorrectly.                                                                                               |
-| `message.permission` | Message shown when permission is missing.                                                                                                         |
+| Key                              | Description                                                                                                                                       |
+|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+| `command-prefix`                 | Command that is executed on the target server to actually teleport the player to the warp point (e.g., the command of the installed warp plugin). |
+| `need-permission`                | Determines whether players need an explicit permission to use `/proxiedwarp` for a specific server (see [Permissions](#permissions)).             |
+| `whitelisted-servers`            | List of servers that are allowed to be used as a target. If empty, all servers are allowed.                                                       |
+| `whitelisted-warps`              | List of warps that are allowed to be triggered. If empty, all warps are allowed.                                                                  |
+| `aliases`                        | Section to define aliases for warps, mapping a simple name to a target server (e.g., `spawn: lobby`).                                             |
+| `message.usage`                  | Message shown when the command is used incorrectly.                                                                                               |
+| `message.permission`             | Message shown when permission is missing.                                                                                                         |
+| `message.server-not-whitelisted` | Message shown when a server is not whitelisted.                                                                                                   |
+| `message.warp-not-whitelisted`   | Message shown when a warp is not whitelisted.                                                                                                     |
 
 In the **`paper` module**, messages support [MiniMessage](https://docs.papermc.io/adventure/minimessage/) formatting (e.g. `<red>`, `<bold>`). In the **`spigot` module**, messages use legacy Minecraft color codes with `&` as the formatting character (e.g. `&c` for red) instead, since MiniMessage is not available there.
 
@@ -69,10 +86,12 @@ The following command is available on the backend server (Paper or Spigot):
 
 ```
 /proxiedwarp <server> <warp>
+/proxiedwarp <alias>
 ```
 
 - `<server>` – Name of the target server, as registered in the Velocity configuration (`velocity.toml`).
 - `<warp>` – Name of the warp point on the target server.
+- `<alias>` – An alias defined in the `config.yml` that maps to a specific server and warp.
 
 The command can only be executed by players (not from the console).
 
