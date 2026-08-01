@@ -1,5 +1,7 @@
 # Proxied Warp
 
+[GitHub](https://github.com/mrcl-at/proxied_warp) - [Hangar](https://hangar.papermc.io/mrcl/proxied_warp) - [Modrinth](https://modrinth.com/plugin/proxied-warp) - [SpigotMC](https://www.spigotmc.org/resources/proxied-warp.137397/) - [Discord](https://discord.gg/8pSzR4XYPw)
+
 Proxied Warp allows players to teleport **across servers** within a Velocity network by triggering an existing warp plugin (e.g., Essentials, or similar) on the target server. The player doesn't need to manually switch servers – Proxied Warp automatically connects them to the target server and then executes the warp command there.
 
 The project consists of three parts:
