@@ -20,6 +20,7 @@ public interface BukkitPlugin {
         getConfig().addDefault("need-permission", false);
         getConfig().addDefault("whitelisted-servers", new String[]{});
         getConfig().addDefault("whitelisted-warps", new String[]{});
+        getConfig().addDefault("aliases", null);
         getConfig().addDefault("message.usage", getMessageUsage());
         getConfig().addDefault("message.permission", getMessagePermission());
         getConfig().addDefault("message.server-not-whitelisted", getMessageServerNotWhitelisted());

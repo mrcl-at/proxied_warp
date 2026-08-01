@@ -8,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+import java.util.Map;
+
 public class ProxiedWarpCommand implements CommandExecutor {
 
     private final BukkitPlugin plugin;
@@ -23,29 +25,49 @@ public class ProxiedWarpCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 2) {
+        String server = null, warp = null;
+
+        if (args.length == 1) {
+            final var section = plugin.getConfig().getConfigurationSection("aliases");
+            if (section != null) {
+                for (final var key : section.getKeys(false)) {
+                    if (key.equalsIgnoreCase(args[0])) {
+                        warp = key;
+                        server = section.getString(key);
+                        break;
+                    }
+                }
+            }
+
+        } else if (args.length == 2) {
+            server = args[0];
+            warp = args[1];
+        } else {
             plugin.sendMessage(player, "usage", plugin.getMessageUsage());
             return true;
         }
 
-        final var warp = args[1];
-        if (!hasPermission(sender, warp)) {
-            plugin.sendMessage(player, "permission", plugin.getMessagePermission());
+        if (server == null || warp == null) {
+            plugin.sendMessage(player, "usage", plugin.getMessageUsage());
             return true;
         }
 
-        final var server = args[0];
+        if (!hasPermission(sender, warp)) {
+            plugin.sendMessage(sender, "permission", plugin.getMessagePermission());
+            return true;
+        }
+
         if (!isServerWhitelisted(server)) {
-            plugin.sendMessage(player, "server-not-whitelisted", plugin.getMessageServerNotWhitelisted());
+            plugin.sendMessage(sender, "server-not-whitelisted", plugin.getMessageServerNotWhitelisted());
             return true;
         }
 
         if (!isWarpWhitelisted(warp)) {
-            plugin.sendMessage(player, "warp-not-whitelisted", plugin.getMessageWarpNotWhitelisted());
+            plugin.sendMessage(sender, "warp-not-whitelisted", plugin.getMessageWarpNotWhitelisted());
             return true;
         }
 
-        player.sendPluginMessage(plugin.getPlugin(), ProjectVariable.CHANNEL, new Codec(player.getName(), args[0], warp).write());
+        player.sendPluginMessage(plugin.getPlugin(), ProjectVariable.CHANNEL, new Codec(sender.getName(), server, warp).write());
         return true;
     }
 
