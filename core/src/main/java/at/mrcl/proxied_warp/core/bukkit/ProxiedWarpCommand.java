@@ -34,8 +34,19 @@ public class ProxiedWarpCommand implements CommandExecutor {
             return true;
         }
 
+        final var server = args[0];
+        if (!isServerWhitelisted(server)) {
+            plugin.sendMessage(player, "server-not-whitelisted", plugin.getMessageServerNotWhitelisted());
+            return true;
+        }
+
         player.sendPluginMessage(plugin.getPlugin(), ProjectVariable.CHANNEL, new Codec(player.getName(), args[0], warp).write());
         return true;
+    }
+
+    private boolean isServerWhitelisted(String server) {
+        final var list = plugin.getConfig().getStringList("whitelisted-servers");
+        return list.isEmpty() || list.stream().anyMatch(server::equalsIgnoreCase);
     }
 
     private boolean hasPermission(CommandSender sender, String warp) {
