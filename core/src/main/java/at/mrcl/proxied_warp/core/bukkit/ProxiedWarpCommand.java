@@ -8,8 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Map;
-
 public class ProxiedWarpCommand implements CommandExecutor {
 
     private final BukkitPlugin plugin;
