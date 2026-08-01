@@ -5,10 +5,13 @@ import at.mrcl.proxied_warp.core.codec.Codec;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
-public class ProxiedWarpCommand implements CommandExecutor {
+import java.util.List;
+
+public class ProxiedWarpCommand implements CommandExecutor, TabCompleter {
 
     private final BukkitPlugin plugin;
 
@@ -83,5 +86,10 @@ public class ProxiedWarpCommand implements CommandExecutor {
         if (!plugin.getConfig().getBoolean("need-permission")) return true;
         if (sender.hasPermission("proxiedwarp.warp.*")) return true;
         return sender.hasPermission("proxiedwarp.warp." + warp);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        return List.of();
     }
 }
