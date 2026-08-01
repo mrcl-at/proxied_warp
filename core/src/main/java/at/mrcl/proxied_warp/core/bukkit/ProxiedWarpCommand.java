@@ -28,12 +28,13 @@ public class ProxiedWarpCommand implements CommandExecutor {
             return true;
         }
 
-        if (!hasPermission(sender, args[1])) {
+        final var warp = args[1];
+        if (!hasPermission(sender, warp)) {
             plugin.sendMessage(player, "permission", plugin.getMessagePermission());
             return true;
         }
 
-        player.sendPluginMessage(plugin.getPlugin(), ProjectVariable.CHANNEL, new Codec(player.getName(), args[0], args[1]).write());
+        player.sendPluginMessage(plugin.getPlugin(), ProjectVariable.CHANNEL, new Codec(player.getName(), args[0], warp).write());
         return true;
     }
 
