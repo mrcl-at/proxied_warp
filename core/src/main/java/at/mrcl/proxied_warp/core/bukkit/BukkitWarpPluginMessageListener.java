@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jspecify.annotations.NonNull;
 
-public class BukkitPluginMessageListener implements PluginMessageListener {
+public class BukkitWarpPluginMessageListener implements PluginMessageListener {
 
     private final BukkitPlugin plugin;
 
-    public BukkitPluginMessageListener(BukkitPlugin plugin) {
+    public BukkitWarpPluginMessageListener(BukkitPlugin plugin) {
         this.plugin = plugin;
     }
 

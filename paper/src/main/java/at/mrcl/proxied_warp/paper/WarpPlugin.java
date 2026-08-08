@@ -3,6 +3,7 @@ package at.mrcl.proxied_warp.paper;
 import at.mrcl.proxied_warp.core.ProjectVariable;
 import at.mrcl.proxied_warp.core.bukkit.BukkitPlugin;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,9 +52,26 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
+    public String getMessageKeyNotFound() {
+        return "<red>Key <gray>'<key>'</gray> not found!";
+    }
+
+    @Override
+    public String getMessageServerNotFound() {
+        return "<red>Server not found!";
+    }
+
+    @Override
     public void sendMessage(CommandSender sender, String key, String fallback) {
-        var message = getConfig().getString("message." + key);
-        if (message == null) message = fallback;
-        sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
+        sender.sendMessage(MiniMessage.miniMessage().deserialize(getMessage(key, fallback)));
+    }
+
+    @Override
+    public void sendMessage(CommandSender sender, String key) {
+        final var component = MiniMessage.miniMessage().deserialize(
+                getMessage(key, getMessageKeyNotFound()),
+                Placeholder.parsed("key", key)
+        );
+        sender.sendMessage(component);
     }
 }

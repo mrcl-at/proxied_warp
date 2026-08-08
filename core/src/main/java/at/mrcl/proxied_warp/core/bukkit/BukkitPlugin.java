@@ -11,7 +11,8 @@ public interface BukkitPlugin {
     default void enable() {
         final var messenger = getPlugin().getServer().getMessenger();
         messenger.registerOutgoingPluginChannel(getPlugin(), ProjectVariable.CHANNEL);
-        messenger.registerIncomingPluginChannel(getPlugin(), ProjectVariable.CHANNEL, new BukkitPluginMessageListener(this));
+        messenger.registerIncomingPluginChannel(getPlugin(), ProjectVariable.CHANNEL, new BukkitWarpPluginMessageListener(this));
+        messenger.registerIncomingPluginChannel(getPlugin(), ProjectVariable.CHANNEL_MESSAGE, new BukkitMessagePluginMessageListener(this));
 
         getCommand("proxiedwarp").setExecutor(new ProxiedWarpCommand(this));
         getCommand("proxiedwarpother").setExecutor(new ProxiedWarpOtherCommand(this));
@@ -28,6 +29,8 @@ public interface BukkitPlugin {
         getConfig().addDefault("message.server-not-whitelisted", getMessageServerNotWhitelisted());
         getConfig().addDefault("message.warp-not-whitelisted", getMessageWarpNotWhitelisted());
         getConfig().addDefault("message.player-not-online", getMessagePlayerNotOnline());
+        getConfig().addDefault("message.key-not-found", getMessageKeyNotFound());
+        getConfig().addDefault("message.server-not-found", getMessageServerNotFound());
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -45,6 +48,13 @@ public interface BukkitPlugin {
     String getMessageServerNotWhitelisted();
     String getMessageWarpNotWhitelisted();
     String getMessagePlayerNotOnline();
+    String getMessageKeyNotFound();
+    String getMessageServerNotFound();
 
+    default String getMessage(String key, String fallback) {
+        var message = getConfig().getString("message." + key);
+        return message == null ? fallback : message;
+    }
     void sendMessage(CommandSender sender, String key, String fallback);
+    void sendMessage(CommandSender sender, String key);
 }

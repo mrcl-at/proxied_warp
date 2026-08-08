@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 public class WarpPlugin {
 
     private static final MinecraftChannelIdentifier CHANNEL_IDENTIFIER = MinecraftChannelIdentifier.from(ProjectVariable.CHANNEL);
+    private static final MinecraftChannelIdentifier CHANNEL_IDENTIFIER_MESSAGE = MinecraftChannelIdentifier.from(ProjectVariable.CHANNEL_MESSAGE);
 
     private final ProxyServer server;
     private final Logger logger;
@@ -33,6 +34,7 @@ public class WarpPlugin {
     @Subscribe
     public void onProxyInitializeEvent(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(CHANNEL_IDENTIFIER);
+        server.getChannelRegistrar().register(CHANNEL_IDENTIFIER_MESSAGE);
         metricsFactory.make(this, ProjectVariable.BSTATS_ID_VELOCITY);
     }
 
@@ -47,7 +49,7 @@ public class WarpPlugin {
             server.getPlayer(codec.player()).ifPresentOrElse(player -> {
                 server.getServer(codec.server()).ifPresentOrElse(registeredServer -> {
                     if (player.getCurrentServer().isPresent() && player.getCurrentServer().get().getServerInfo().equals(registeredServer)) {
-                        sendPluginMessage(registeredServer, codec.encode());
+                        sendPluginMessage(registeredServer, CHANNEL_IDENTIFIER, codec.encode());
                     } else {
                         player.createConnectionRequest(registeredServer)
                                 .connect()
@@ -56,19 +58,22 @@ public class WarpPlugin {
                                         logger.error("Error while connecting to server: {}", throwable.getMessage());
                                         return;
                                     }
-                                    sendPluginMessage(registeredServer, codec.encode());
+                                    sendPluginMessage(registeredServer, CHANNEL_IDENTIFIER, codec.encode());
                                 });
                     }
-                }, () -> logger.error("Server not found: {}", codec.server()));
+                }, () ->  {
+                    logger.error("Server not found: {}", codec.server());
+                    sendPluginMessage(player.getCurrentServer().get().getServer(), CHANNEL_IDENTIFIER, player.getUsername() + " server-not-found");
+                });
             }, () -> logger.error("Player not found: {}", codec.player()));
         } catch (Exception exception) {
             logger.error("Error while processing message: {}", exception.getMessage());
         }
     }
 
-    private void sendPluginMessage(RegisteredServer server, String message) {
+    private void sendPluginMessage(RegisteredServer server, MinecraftChannelIdentifier channel,  String message) {
         final var output = ByteStreams.newDataOutput();
         output.writeUTF(message);
-        server.sendPluginMessage(CHANNEL_IDENTIFIER, output.toByteArray());
+        server.sendPluginMessage(channel, output.toByteArray());
     }
 }

@@ -50,9 +50,22 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
+    public String getMessageKeyNotFound() {
+        return "&cKey &f'%s' &cnot found!";
+    }
+
+    @Override
+    public String getMessageServerNotFound() {
+        return "&cServer not found!";
+    }
+
+    @Override
     public void sendMessage(CommandSender sender, String key, String fallback) {
-        var message = getConfig().getString("message." + key);
-        if (message == null) message = fallback;
-        sender.sendMessage(message.replace("&", "§"));
+        sender.sendMessage(getMessage(key, fallback).replace("&", "§"));
+    }
+
+    @Override
+    public void sendMessage(CommandSender sender, String key) {
+        sender.sendMessage(getMessage(key, getMessageKeyNotFound().formatted(key)).replace("&", "§"));
     }
 }
