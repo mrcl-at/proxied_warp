@@ -28,7 +28,7 @@ jobs:
       - name: Collect JARs
         run: |
           mkdir -p release
-          find . -name '*.jar' -not -name 'original-*' -path '*/target/*' -exec cp {} release/ \;
+          find . -name '*.jar' -not -name 'original-*' -path '*/target/*' -not -path './core/*' -exec cp {} release/ \;
 
       - name: List collected JARs
         run: ls -la release/
