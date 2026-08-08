@@ -14,6 +14,7 @@ public interface BukkitPlugin {
         messenger.registerIncomingPluginChannel(getPlugin(), ProjectVariable.CHANNEL, new BukkitPluginMessageListener(this));
 
         getCommand("proxiedwarp").setExecutor(new ProxiedWarpCommand(this));
+        getCommand("proxiedwarpother").setExecutor(new ProxiedWarpOtherCommand(this));
 
         getConfig().options().header("ProxiedWarp by mrcl - https://github.com/mrcl-at/proxied_warp");
         getConfig().addDefault("command-prefix", "warp");
@@ -22,9 +23,11 @@ public interface BukkitPlugin {
         getConfig().addDefault("whitelisted-warps", new String[]{});
         getConfig().addDefault("aliases", null);
         getConfig().addDefault("message.usage", getMessageUsage());
+        getConfig().addDefault("message.usage-other", getMessageUsageOther());
         getConfig().addDefault("message.permission", getMessagePermission());
         getConfig().addDefault("message.server-not-whitelisted", getMessageServerNotWhitelisted());
         getConfig().addDefault("message.warp-not-whitelisted", getMessageWarpNotWhitelisted());
+        getConfig().addDefault("message.player-not-online", getMessagePlayerNotOnline());
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -37,9 +40,11 @@ public interface BukkitPlugin {
     void saveConfig();
 
     String getMessageUsage();
+    String getMessageUsageOther();
     String getMessagePermission();
     String getMessageServerNotWhitelisted();
     String getMessageWarpNotWhitelisted();
+    String getMessagePlayerNotOnline();
 
     void sendMessage(CommandSender sender, String key, String fallback);
 }

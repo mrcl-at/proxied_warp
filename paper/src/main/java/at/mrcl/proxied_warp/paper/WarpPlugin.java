@@ -22,7 +22,12 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
 
     @Override
     public String getMessageUsage() {
-        return "<red>Usage:</red> /proxiedwarp <server> <warp>";
+        return "<red>Usage:</red> /proxiedwarp <server/alias> [<warp>]";
+    }
+
+    @Override
+    public String getMessageUsageOther() {
+        return "<red>Usage:</red> /proxiedwarpother <player> <server/alias> [<warp>]";
     }
 
     @Override
@@ -38,6 +43,11 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     @Override
     public String getMessageWarpNotWhitelisted() {
         return "<red>This warp is not whitelisted!";
+    }
+
+    @Override
+    public String getMessagePlayerNotOnline() {
+        return "<red>Player is not online!";
     }
 
     @Override
