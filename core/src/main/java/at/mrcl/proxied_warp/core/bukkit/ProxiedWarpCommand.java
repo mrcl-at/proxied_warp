@@ -22,9 +22,14 @@ public class ProxiedWarpCommand extends AbstractProxiedWarpCommand {
         }
         return true;
     }
-    
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1) {
+            return filterSuggestions(args[0], getFirstArgSuggestions());
+        } else if (args.length == 2) {
+            return filterSuggestions(args[1], getStringList("whitelisted-warps"));
+        }
         return List.of();
     }
 

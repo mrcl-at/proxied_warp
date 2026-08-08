@@ -8,6 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public abstract class AbstractProxiedWarpCommand implements CommandExecutor, TabCompleter {
 
     protected final BukkitPlugin plugin;
@@ -90,5 +94,28 @@ public abstract class AbstractProxiedWarpCommand implements CommandExecutor, Tab
                 ProjectVariable.CHANNEL,
                 new Codec(warpInfo.player(), warpInfo.server(), warpInfo.warp()).write()
         );
+    }
+
+    protected List<String> getFirstArgSuggestions() {
+        List<String> list = new ArrayList<>();
+        list.addAll(getStringList("whitelisted-warps"));
+        list.addAll(getStringList("whitelisted-servers"));
+
+        var aliasesSection = this.plugin.getConfig().getConfigurationSection("aliases");
+        if (aliasesSection != null) {
+            list.addAll(aliasesSection.getKeys(false));
+        }
+        return list;
+    }
+
+    protected List<String> getStringList(String path) {
+        return this.plugin.getConfig().getStringList(path);
+    }
+
+    protected List<String> filterSuggestions(String input, List<String> options) {
+        String lower = input.toLowerCase();
+        return options.stream()
+                .filter(s -> s.toLowerCase().startsWith(lower))
+                .toList();
     }
 }
