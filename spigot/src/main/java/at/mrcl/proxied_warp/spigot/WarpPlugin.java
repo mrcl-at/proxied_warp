@@ -60,6 +60,11 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
+    public String getMessageConnectionFailed() {
+        return "&cConnection failed!";
+    }
+
+    @Override
     public void sendMessage(CommandSender sender, String key, String fallback) {
         sender.sendMessage(getMessage(key, fallback).replace("&", "§"));
     }

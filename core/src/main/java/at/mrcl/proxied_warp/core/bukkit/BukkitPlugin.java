@@ -31,6 +31,7 @@ public interface BukkitPlugin {
         getConfig().addDefault("message.player-not-online", getMessagePlayerNotOnline());
         getConfig().addDefault("message.key-not-found", getMessageKeyNotFound());
         getConfig().addDefault("message.server-not-found", getMessageServerNotFound());
+        getConfig().addDefault("message.connection-failed", getMessageConnectionFailed());
         getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -50,6 +51,7 @@ public interface BukkitPlugin {
     String getMessagePlayerNotOnline();
     String getMessageKeyNotFound();
     String getMessageServerNotFound();
+    String getMessageConnectionFailed();
 
     default String getMessage(String key, String fallback) {
         var message = getConfig().getString("message." + key);

@@ -62,6 +62,11 @@ public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
     }
 
     @Override
+    public String getMessageConnectionFailed() {
+        return "<red>Connection failed!";
+    }
+
+    @Override
     public void sendMessage(CommandSender sender, String key, String fallback) {
         sender.sendMessage(MiniMessage.miniMessage().deserialize(getMessage(key, fallback)));
     }

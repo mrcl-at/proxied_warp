@@ -56,6 +56,7 @@ public class WarpPlugin {
                                 .whenComplete((result, throwable) -> {
                                     if (throwable != null) {
                                         logger.error("Error while connecting to server: {}", throwable.getMessage());
+                                        sendPluginMessage(registeredServer, CHANNEL_IDENTIFIER_MESSAGE, codec.player() + " connection-failed");
                                         return;
                                     }
                                     sendPluginMessage(registeredServer, CHANNEL_IDENTIFIER, codec.encode());

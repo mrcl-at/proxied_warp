@@ -45,6 +45,7 @@ public class WarpPlugin extends Plugin implements Listener {
                     sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
                 } else {
                     getLogger().warning("Player " + player.getName() + " failed to connect to server " + server.getName());
+                    sendPluginMessage(player, ProjectVariable.CHANNEL_MESSAGE, player.getName() + " connection-failed");
                 }
             });
         } else {
