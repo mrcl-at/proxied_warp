@@ -18,6 +18,7 @@ public class WarpPlugin extends Plugin implements Listener {
         new Metrics(this, ProjectVariable.BSTATS_ID_BUNGEECORD);
         ProxyServer.getInstance().registerChannel(ProjectVariable.CHANNEL);
         ProxyServer.getInstance().registerChannel(ProjectVariable.CHANNEL_MESSAGE);
+        ProxyServer.getInstance().getPluginManager().registerListener(this, this);
     }
 
     @EventHandler
