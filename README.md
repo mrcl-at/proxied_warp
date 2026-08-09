@@ -6,12 +6,12 @@ Proxied Warp allows players to teleport **across servers** within a Velocity or 
 
 The project consists of four modules:
 
-| Module     | Task                                                                                                                 |
-|------------|------------------------------------------------------------------------------------------------------------------------|
-| `velocity` | Forwards warp requests between backend servers and connects players to the target server when needed                 |
-| `paper`    | Receives the `/proxiedwarp` command from the player and executes the actual warp command after the server connection. For **Paper** backend servers. Supports [MiniMessage](https://docs.papermc.io/adventure/minimessage/) formatting for messages |
-| `spigot`   | Same functionality as the `paper` module, but for **Spigot** backend servers. Messages use legacy Minecraft color codes (`&`) instead of MiniMessage |
-| `bungeecord` | BungeeCord proxy module that forwards warp requests and connects players to the target server |
+| Module       | Task                                                                                                                                                                                                                                                |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `velocity`   | Forwards warp requests between backend servers and connects players to the target server when needed                                                                                                                                                |
+| `paper`      | Receives the `/proxiedwarp` command from the player and executes the actual warp command after the server connection. For **Paper** backend servers. Supports [MiniMessage](https://docs.papermc.io/adventure/minimessage/) formatting for messages |
+| `spigot`     | Same functionality as the `paper` module, but for **Spigot** backend servers. Messages use legacy Minecraft color codes (`&`) instead of MiniMessage                                                                                                |
+| `bungeecord` | BungeeCord proxy module that forwards warp requests and connects players to the target server                                                                                                                                                       |
 
 ## How It Works
 
