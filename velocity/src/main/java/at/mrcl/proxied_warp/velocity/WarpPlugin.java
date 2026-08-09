@@ -14,7 +14,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
-@Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.2.0", authors = { "mrcl" })
+@Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.3.0", authors = { "mrcl" })
 public class WarpPlugin {
 
     private static final MinecraftChannelIdentifier CHANNEL_IDENTIFIER = MinecraftChannelIdentifier.from(ProjectVariable.CHANNEL);
