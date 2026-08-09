@@ -40,14 +40,23 @@ public class WarpPlugin extends Plugin implements Listener {
         }
 
         if (!player.getServer().getInfo().getName().equals(server.getName())) {
-            player.connect(server);
+            player.connect(server, (result, throwable) -> {
+                if (result) {
+                    sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
+                } else {
+                    getLogger().warning("Player " + player.getName() + " failed to connect to server " + server.getName());
+                }
+            });
+        } else {
+            sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
         }
-        sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
     }
 
     private void sendPluginMessage(ProxiedPlayer player, String channel, String message) {
         final var output = ByteStreams.newDataOutput();
         output.writeUTF(message);
-        player.sendData(channel, output.toByteArray());
+        if (player.getServer() != null) {
+            player.getServer().sendData(channel, output.toByteArray());
+        }
     }
 }
