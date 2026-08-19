@@ -1,0 +1,170 @@
+[CENTER][SIZE=6][B]Proxied Warp[/B][/SIZE]
+
+[URL='https://github.com/mrcl-at/proxied_warp']GitHub[/URL] - [URL='https://hangar.papermc.io/mrcl/proxied_warp']Hangar[/URL] - [URL='https://modrinth.com/plugin/proxied-warp']Modrinth[/URL] - [URL='https://www.spigotmc.org/resources/proxied-warp.137397/']SpigotMC[/URL] - [URL='https://discord.gg/8pSzR4XYPw']Discord[/URL][/CENTER]
+
+Proxied Warp allows players to teleport [B]across servers[/B] within a Velocity or BungeeCord network by triggering an existing warp plugin (e.g., Essentials, or similar) on the target server. The player doesn't need to manually switch servers – Proxied Warp automatically connects them to the target server and then executes the warp command there.
+
+The project consists of four modules:
+
+[TABLE]
+[TR]
+[TH]Module[/TH]
+[TH]Task[/TH]
+[/TR]
+[TR]
+[TD][B]velocity[/B][/TD]
+[TD]Forwards warp requests between backend servers and connects players to the target server when needed[/TD]
+[/TR]
+[TR]
+[TD][B]paper[/B][/TD]
+[TD]Receives the [B]/proxiedwarp[/B] command from the player and executes the actual warp command after the server connection. For [B]Paper[/B] backend servers. Supports [URL='https://docs.papermc.io/adventure/minimessage/']MiniMessage[/URL] formatting for messages[/TD]
+[/TR]
+[TR]
+[TD][B]spigot[/B][/TD]
+[TD]Same functionality as the [B]paper[/B] module, but for [B]Spigot[/B] backend servers. Messages use legacy Minecraft color codes ([B]&[/B]) instead of MiniMessage[/TD]
+[/TR]
+[TR]
+[TD][B]bungeecord[/B][/TD]
+[TD]BungeeCord proxy module that forwards warp requests and connects players to the target server[/TD]
+[/TR]
+[/TABLE]
+
+[SIZE=4][B]How It Works[/B][/SIZE]
+
+Communication between the proxy and backend servers happens via the shared [B]Plugin Messaging Channels[/B] [B]proxied_warp:warp[/B] and [B]proxied_warp:message[/B].
+
+The process works as follows:
+
+[LIST=1]
+[*][B]Player executes command[/B] – On a backend server, the player calls the registered command with a target server and warp name (e.g., [B]/proxiedwarp lobby spawn[/B]).
+[*][B]Backend plugin sends message[/B] – The plugin ([B]paper[/B] or [B]spigot[/B] module, depending on the server) first checks the input and permission, then builds the message [B]<player> <server> <warp>[/B] and sends it as a plugin message over the channel to the proxy.
+[*][B]Proxy plugin processes the request[/B] (Velocity or BungeeCord):
+[LIST]
+[*]Checks whether the specified player and target server exist.
+[*]If the player is already on the target server, the message is forwarded directly.
+[*]Otherwise, a connection to the target server is established first, and the message is only forwarded after the server switch succeeds.
+[/LIST]
+[*][B]Target server executes the warp[/B] – The plugin on the target server receives the forwarded message, checks whether the player is online there, and executes the configured warp command with the given warp name.
+[/LIST]
+
+[SIZE=4][B]Installation[/B][/SIZE]
+
+[LIST=1]
+[*]Place the matching proxy module in the proxy's [B]plugins[/B] folder: [B]velocity[/B] for Velocity or [B]bungeecord[/B] for BungeeCord.
+[*]Install the matching backend module on [B]every[/B] backend server where players should be able to trigger or receive warps: the [B]paper[/B] module on Paper servers, the [B]spigot[/B] module on Spigot servers.
+[*]Restart the proxy and the affected backend servers.
+[/LIST]
+
+[SIZE=4][B]Configuration (Paper/Spigot Modules)[/B][/SIZE]
+
+On first startup, the respective plugin generates a [B]config.yml[/B] with the following default values:
+
+[B]paper module:[/B]
+
+[CODE]command-prefix: warp
+need-permission: false
+whitelisted-servers: []
+whitelisted-warps: []
+aliases:
+  spawn: lobby
+message:
+  usage: '<red>Usage:</red> /proxiedwarp <server/alias> [<warp>]'
+  usage-other: '<red>Usage:</red> /proxiedwarpother <player> <server/alias> [<warp>]'
+  permission: '<red>You do not have permission to do that!</red>'
+  server-not-whitelisted: '<red>This server is not whitelisted!</red>'
+  warp-not-whitelisted: '<red>This warp is not whitelisted!</red>'
+  player-not-online: '<red>Player is not online!</red>'
+  key-not-found: "<red>Key '<key>' not found!"
+  server-not-found: '<red>Server not found!</red>'
+  connection-failed: '<red>Connection failed!</red>'[/CODE]
+
+[B]spigot module:[/B]
+
+[CODE]command-prefix: warp
+need-permission: false
+whitelisted-servers: []
+whitelisted-warps: []
+aliases:
+  spawn: lobby
+message:
+  usage: '&cUsage:&r /proxiedwarp <server/alias> [<warp>]'
+  usage-other: '&cUsage:&r /proxiedwarpother <player> <server/alias> [<warp>]'
+  permission: '&cYou do not have permission to do that!'
+  server-not-whitelisted: '&cThis server is not whitelisted!'
+  warp-not-whitelisted: '&cThis warp is not whitelisted!'
+  player-not-online: '&cPlayer is not online!'
+  key-not-found: "&cKey &f'%s' &cnot found!"
+  server-not-found: '&cServer not found!'
+  connection-failed: '&cConnection failed!'[/CODE]
+
+[TABLE]
+[TR]
+[TH]Key[/TH]
+[TH]Description[/TH]
+[/TR]
+[TR][TD][B]command-prefix[/B][/TD][TD]Command that is executed on the target server to actually teleport the player to the warp point (e.g., the command of the installed warp plugin).[/TD][/TR]
+[TR][TD][B]need-permission[/B][/TD][TD]Determines whether players need an explicit permission to use [B]/proxiedwarp[/B] for a specific server (see [B]Permissions[/B]).[/TD][/TR]
+[TR][TD][B]whitelisted-servers[/B][/TD][TD]List of servers that are allowed to be used as a target. If empty, all servers are allowed.[/TD][/TR]
+[TR][TD][B]whitelisted-warps[/B][/TD][TD]List of warps that are allowed to be triggered. If empty, all warps are allowed.[/TD][/TR]
+[TR][TD][B]aliases[/B][/TD][TD]Section to define aliases for warps, mapping a simple name to a target server (e.g., [B]spawn: lobby[/B]).[/TD][/TR]
+[TR][TD][B]message.usage[/B][/TD][TD]Message shown when the command is used incorrectly.[/TD][/TR]
+[TR][TD][B]message.permission[/B][/TD][TD]Message shown when permission is missing.[/TD][/TR]
+[TR][TD][B]message.server-not-whitelisted[/B][/TD][TD]Message shown when a server is not whitelisted.[/TD][/TR]
+[TR][TD][B]message.warp-not-whitelisted[/B][/TD][TD]Message shown when a warp is not whitelisted.[/TD][/TR]
+[TR][TD][B]message.usage-other[/B][/TD][TD]Message shown when [B]/proxiedwarpother[/B] is used incorrectly.[/TD][/TR]
+[TR][TD][B]message.player-not-online[/B][/TD][TD]Message shown when the selected player is not online.[/TD][/TR]
+[TR][TD][B]message.key-not-found[/B][/TD][TD]Fallback message used when a configured message key is missing.[/TD][/TR]
+[TR][TD][B]message.server-not-found[/B][/TD][TD]Message shown when the target server cannot be found by the proxy.[/TD][/TR]
+[TR][TD][B]message.connection-failed[/B][/TD][TD]Message shown when the proxy cannot connect the player to the target server.[/TD][/TR]
+[/TABLE]
+
+In the [B]paper[/B] module, messages support [URL='https://docs.papermc.io/adventure/minimessage/']MiniMessage[/URL] formatting (e.g. [B]<red>[/B], [B]<bold>[/B]). In the [B]spigot[/B] module, messages use legacy Minecraft color codes with [B]&[/B] as the formatting character (e.g. [B]&c[/B] for red) instead, since MiniMessage is not available there.
+
+[SIZE=4][B]Command[/B][/SIZE]
+
+The following commands are available on the backend server (Paper or Spigot):
+
+[B]/proxiedwarp <server> <warp>[/B]
+[B]/proxiedwarp <alias>[/B]
+[B]/proxiedwarpother <player> <server> <warp>[/B]
+[B]/proxiedwarpother <player> <alias>[/B]
+
+[LIST]
+[*][B]<server>[/B] – Name of the target server, as registered in the proxy configuration (for example [B]velocity.toml[/B]).
+[*][B]<warp>[/B] – Name of the warp point on the target server.
+[*][B]<alias>[/B] – An alias defined in the [B]config.yml[/B] that maps to a specific server and warp.
+[*][B]<player>[/B] – An online player who should be connected and sent to the warp.
+[/LIST]
+
+[B]/proxiedwarp[/B] can only be executed by players. [B]/proxiedwarpother[/B] can also be executed from the console.
+
+[SIZE=4][B]Permissions[/B][/SIZE]
+
+If [B]need-permission[/B] is set to [B]true[/B] in [B]config.yml[/B], a player needs one of the following permissions to execute [B]/proxiedwarp <server> <warp>[/B]:
+
+[TABLE]
+[TR][TH]Permission[/TH][TH]Effect[/TH][/TR]
+[TR][TD][B]proxiedwarp.warp.*[/B][/TD][TD]Allows warping to [B]all[/B] servers.[/TD][/TR]
+[TR][TD][B]proxiedwarp.warp.<warp>[/B][/TD][TD]Allows warping to a [B]specific[/B] warp (e.g., [B]proxiedwarp.warp.spawn[/B]).[/TD][/TR]
+[/TABLE]
+
+For [B]/proxiedwarpother[/B], the corresponding permissions are [B]proxiedwarp.warp.other.*[/B] and [B]proxiedwarp.warp.other.<warp>[/B].
+
+If both permissions are missing, the player receives the error message configured in [B]message.permission[/B], and the request is not sent to the proxy.
+
+If [B]need-permission[/B] is set to [B]false[/B] (default), no permission check is performed and every player can use the command for every registered server.
+
+[SIZE=4][B]Requirements[/B][/SIZE]
+
+[LIST]
+[*]A Velocity or BungeeCord proxy with the matching proxy module ([B]velocity[/B] or [B]bungeecord[/B]).
+[*]A [B]Paper[/B] based backend server (with the [B]paper[/B] module) or a [B]Spigot[/B] based backend server (with the [B]spigot[/B] module).
+[*]A warp plugin on each involved backend server that can be triggered via command (not via API), and whose command can be entered in [B]command-prefix[/B].
+[*]Java version [B]25[/B] or higher.
+[/LIST]
+
+[SIZE=4][B]Known Limitations[/B][/SIZE]
+
+[LIST]
+[*]Proxied Warp itself does not check whether the specified warp actually exists – this is only checked by the invoked warp plugin on the target server.
+[/LIST]
