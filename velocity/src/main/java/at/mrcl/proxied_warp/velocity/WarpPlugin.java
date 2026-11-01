@@ -35,7 +35,7 @@ public class WarpPlugin {
     public void onProxyInitializeEvent(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(CHANNEL_IDENTIFIER);
         server.getChannelRegistrar().register(CHANNEL_IDENTIFIER_MESSAGE);
-        metricsFactory.make(this, ProjectVariable.BSTATS_ID_VELOCITY);
+        metricsFactory.make(this, ProjectVariable.B_STATS_ID_VELOCITY);
     }
 
     @Subscribe
