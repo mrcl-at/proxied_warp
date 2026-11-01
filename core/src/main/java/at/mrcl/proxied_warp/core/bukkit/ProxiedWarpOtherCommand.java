@@ -17,7 +17,7 @@ public class ProxiedWarpOtherCommand extends AbstractProxiedWarpCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        makeChecksThenSendPluginMessage(sender, getWarpInfo(true, args.length > 0 ? args[0] : null, args));
+        makeChecksThenSendPluginMessage(sender, WarpInfo.getInfo(plugin, true, args.length > 0 ? args[0] : null, args));
         return true;
     }
 

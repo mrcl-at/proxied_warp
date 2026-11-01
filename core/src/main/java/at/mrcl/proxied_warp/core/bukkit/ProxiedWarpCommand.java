@@ -16,7 +16,7 @@ public class ProxiedWarpCommand extends AbstractProxiedWarpCommand {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NonNull [] args) {
         if (sender instanceof Player player) {
-            makeChecksThenSendPluginMessage(sender, getWarpInfo(false, player.getName(), args));
+            makeChecksThenSendPluginMessage(sender, WarpInfo.getInfo(plugin, false, player.getName(), args));
         } else {
             sender.sendMessage("§cThis command can only be executed by players.");
         }
