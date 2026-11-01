@@ -8,7 +8,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
+public class PaperWarpPlugin extends JavaPlugin implements BukkitPlugin {
 
     @Override
     public void onEnable() {
