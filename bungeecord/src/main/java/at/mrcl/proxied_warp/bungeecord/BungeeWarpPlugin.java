@@ -11,7 +11,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 import org.bstats.bungeecord.Metrics;
 
-public class WarpPlugin extends Plugin implements Listener {
+public class BungeeWarpPlugin extends Plugin implements Listener {
 
     @Override
     public void onEnable() {
