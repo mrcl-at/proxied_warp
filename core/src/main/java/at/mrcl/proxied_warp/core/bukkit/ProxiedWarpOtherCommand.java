@@ -4,9 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
+@NullMarked
 public class ProxiedWarpOtherCommand extends AbstractProxiedWarpCommand {
 
     public ProxiedWarpOtherCommand(BukkitPlugin plugin) {
@@ -15,12 +17,7 @@ public class ProxiedWarpOtherCommand extends AbstractProxiedWarpCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String playerName = null;
-        if (args.length > 0) {
-            playerName = args[0];
-        }
-
-        makeChecksThenSendPluginMessage(sender, getWarpInfo(true, playerName, args));
+        makeChecksThenSendPluginMessage(sender, getWarpInfo(true, args.length > 0 ? args[0] : null, args));
         return true;
     }
 
