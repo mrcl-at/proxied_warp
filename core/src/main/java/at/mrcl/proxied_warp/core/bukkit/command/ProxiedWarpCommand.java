@@ -1,5 +1,6 @@
-package at.mrcl.proxied_warp.core.bukkit;
+package at.mrcl.proxied_warp.core.bukkit.command;
 
+import at.mrcl.proxied_warp.core.bukkit.BukkitPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

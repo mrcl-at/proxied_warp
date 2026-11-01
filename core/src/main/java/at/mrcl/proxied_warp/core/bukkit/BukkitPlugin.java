@@ -1,6 +1,8 @@
 package at.mrcl.proxied_warp.core.bukkit;
 
 import at.mrcl.proxied_warp.core.ProjectVariable;
+import at.mrcl.proxied_warp.core.bukkit.command.ProxiedWarpCommand;
+import at.mrcl.proxied_warp.core.bukkit.command.ProxiedWarpOtherCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
