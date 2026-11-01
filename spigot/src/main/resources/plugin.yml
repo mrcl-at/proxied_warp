@@ -1,4 +1,4 @@
-main: at.mrcl.proxied_warp.spigot.WarpPlugin
+main: at.mrcl.proxied_warp.spigot.SpigotWarpPlugin
 name: proxied_warp
 version: 1.3.0
 
