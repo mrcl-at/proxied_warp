@@ -6,12 +6,12 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class WarpPlugin extends JavaPlugin implements BukkitPlugin {
+public class SpigotWarpPlugin extends JavaPlugin implements BukkitPlugin {
 
     @Override
     public void onEnable() {
         enable();
-        new Metrics(this, ProjectVariable.BSTATS_ID_BUKKIT);
+        new Metrics(this, ProjectVariable.B_STATS_ID_BUKKIT);
     }
 
     @Override

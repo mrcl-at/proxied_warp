@@ -15,7 +15,7 @@ import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 @Plugin( id = "proxied_warp", name = "proxied_warp", version = "1.3.0", authors = { "mrcl" })
-public class WarpPlugin {
+public class VelocityWarpPlugin {
 
     private static final MinecraftChannelIdentifier CHANNEL_IDENTIFIER = MinecraftChannelIdentifier.from(ProjectVariable.CHANNEL);
     private static final MinecraftChannelIdentifier CHANNEL_IDENTIFIER_MESSAGE = MinecraftChannelIdentifier.from(ProjectVariable.CHANNEL_MESSAGE);
@@ -25,7 +25,7 @@ public class WarpPlugin {
     private final Metrics.Factory metricsFactory;
 
     @Inject
-    public WarpPlugin(ProxyServer server, Logger logger, Metrics.Factory metricsFactory) {
+    public VelocityWarpPlugin(ProxyServer server, Logger logger, Metrics.Factory metricsFactory) {
         this.server = server;
         this.logger = logger;
         this.metricsFactory = metricsFactory;
@@ -35,7 +35,7 @@ public class WarpPlugin {
     public void onProxyInitializeEvent(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(CHANNEL_IDENTIFIER);
         server.getChannelRegistrar().register(CHANNEL_IDENTIFIER_MESSAGE);
-        metricsFactory.make(this, ProjectVariable.BSTATS_ID_VELOCITY);
+        metricsFactory.make(this, ProjectVariable.B_STATS_ID_VELOCITY);
     }
 
     @Subscribe

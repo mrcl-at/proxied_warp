@@ -1,12 +1,11 @@
-package at.mrcl.proxied_warp.core.bukkit;
+package at.mrcl.proxied_warp.core.bukkit.command;
 
 import at.mrcl.proxied_warp.core.ProjectVariable;
+import at.mrcl.proxied_warp.core.bukkit.BukkitPlugin;
 import at.mrcl.proxied_warp.core.codec.Codec;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,43 +20,8 @@ public abstract class AbstractProxiedWarpCommand implements CommandExecutor, Tab
         this.permissionPrefix = permissionPrefix;
     }
 
-    protected record WarpInfo(String warp, String server, String player) {
-        public boolean isEmptyThenSendMessage(AbstractProxiedWarpCommand command, CommandSender sender) {
-            final var is = warp == null || server == null || player == null;
-            if (is) command.plugin.sendMessage(sender, command.getUsage().key(), command.getUsage().fallback());
-            return is;
-        }
-
-        public boolean checkPlayerOrEmptyThenSendMessage(AbstractProxiedWarpCommand command, CommandSender sender) {
-            final var is = player == null;
-            if (is) command.plugin.sendMessage(sender, "player-not-online", command.plugin.getMessagePlayerNotOnline());
-            return is;
-        }
-
-        public Player getPlayer() {
-            return Bukkit.getPlayer(player);
-        }
-    }
-
     protected record Usage(String key, String fallback) {}
     protected abstract Usage getUsage();
-
-    protected WarpInfo getWarpInfo(boolean other, String player, String[] args) {
-        if (args.length == (other ? 2 : 1)) {
-            final var section = plugin.getConfig().getConfigurationSection("aliases");
-            if (section != null) {
-                for (final var key : section.getKeys(false)) {
-                    if (key.equalsIgnoreCase(args[args.length-1])) {
-                        return new WarpInfo(key, section.getString(key), player);
-                    }
-                }
-            }
-
-        } else if (args.length == (other ? 3 : 2)) {
-            return new WarpInfo(args[args.length-1], args[args.length-2], player);
-        }
-        return new WarpInfo(null, null, player);
-    }
 
     protected boolean isServerWhitelistedOrSendMessage(String server, CommandSender sender) {
         final var list = plugin.getConfig().getStringList("whitelisted-servers");
