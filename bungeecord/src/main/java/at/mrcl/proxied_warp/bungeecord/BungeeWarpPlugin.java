@@ -4,6 +4,7 @@ import at.mrcl.proxied_warp.core.ProjectVariable;
 import at.mrcl.proxied_warp.core.codec.Codec;
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -23,34 +24,41 @@ public class BungeeWarpPlugin extends Plugin implements Listener {
 
     @EventHandler
     public void onPluginMessageEvent(PluginMessageEvent event) {
-        if (!event.getTag().equals(ProjectVariable.CHANNEL)) return;
-        final var codec = Codec.decode(event.getData());
+        try {
+            if (!event.getTag().equals(ProjectVariable.CHANNEL)) return;
+            final var codec = Codec.decode(event.getData());
 
+            final var player = getPlayerOrThrow(codec);
+            final var server = getServerOrThrow(player, codec);
+
+            if (!player.getServer().getInfo().getName().equals(server.getName())) {
+                player.connect(server, (result, _) -> {
+                    if (result) {
+                        sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
+                    } else {
+                        getLogger().warning("Player " + player.getName() + " failed to connect to server " + server.getName());
+                        sendPluginMessage(player, ProjectVariable.CHANNEL_MESSAGE, player.getName() + " connection-failed");
+                    }
+                });
+            } else {
+                sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
+            }
+        } catch (Exception e) {
+            getLogger().severe(e.getMessage());
+        }
+    }
+
+    private ProxiedPlayer getPlayerOrThrow(Codec codec) {
         final var player = ProxyServer.getInstance().getPlayer(codec.player());
-        if (player == null) {
-            getLogger().warning("Player " + codec.player() + " not found!");
-            return;
-        }
+        if (player != null) return player;
+        throw new IllegalArgumentException("Player " + codec.player() + " not found!");
+    }
 
+    private ServerInfo getServerOrThrow(ProxiedPlayer player, Codec codec) {
         final var server = ProxyServer.getInstance().getServerInfo(codec.server());
-        if (server == null) {
-            getLogger().warning("Server " + codec.server() + " not found!");
-            sendPluginMessage(player, ProjectVariable.CHANNEL_MESSAGE, player.getName() + " server-not-found");
-            return;
-        }
-
-        if (!player.getServer().getInfo().getName().equals(server.getName())) {
-            player.connect(server, (result, throwable) -> {
-                if (result) {
-                    sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
-                } else {
-                    getLogger().warning("Player " + player.getName() + " failed to connect to server " + server.getName());
-                    sendPluginMessage(player, ProjectVariable.CHANNEL_MESSAGE, player.getName() + " connection-failed");
-                }
-            });
-        } else {
-            sendPluginMessage(player, ProjectVariable.CHANNEL, codec.encode());
-        }
+        if (server != null) return server;
+        sendPluginMessage(player, ProjectVariable.CHANNEL_MESSAGE, player.getName() + " server-not-found");
+        throw new IllegalArgumentException("Server " + codec.server() + " not found!");
     }
 
     private void sendPluginMessage(ProxiedPlayer player, String channel, String message) {
